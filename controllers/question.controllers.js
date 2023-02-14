@@ -14,7 +14,11 @@ exports.create = (req, res) => {
   
     // Create a Tutorial
     const question = {
-      question: req.body.question
+      question: req.body.question,
+      proposition: req.body.proposition,
+      answer: req.body.answer,
+      anecdote: req.body.anecdote,
+      quizzId: req.body.quizzId
     };
   
     // Save Tutorial in the database

@@ -24,31 +24,41 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.users = require("../models/answer")(sequelize,Sequelize);
-db.users = require("../models/user.model")(sequelize, Sequelize);
+db.score = require("../models/score")(sequelize,Sequelize);
+db.user = require("../models/user.model")(sequelize,Sequelize);
 db.role = require("../models/role.model.js")(sequelize, Sequelize);
-db.tutorials = require("./tutorial.model.js")(sequelize, Sequelize);
-db.quiz = require("../models/quiz")(sequelize, Sequelize);
-db.tag = require("../models/tag")(sequelize, Sequelize);
+db.category = require("./category")(sequelize, Sequelize);
 db.answer = require ("../models/answer")(sequelize,Sequelize);
 db.question = require("../models/question")(sequelize, Sequelize);
+db.anecdote = require("../models/anecdote")(sequelize, Sequelize);
+db.proposition = require("../models/proposition")(sequelize, Sequelize);
 
-const Answer = require ("../models/answer");
-const Question = require ("../models/question");
 
-// Question.hasMany(Answer, { as: 'answers' });
-// Answer.belongsTo(Question);
+db.question.belongsTo(db.category);
+// db.question.hasMany(db.proposition);
+db.question.hasMany(db.answer);
+db.question.hasMany(db.anecdote);
+db.proposition.belongsTo(db.question);
+db.answer.belongsTo(db.question);
+db.anecdote.belongsTo(db.question);
 
-// db.role.belongsToMany(db.users, {
-//   through: "user_roles",
-//   foreignKey: "roleId",
-//   otherKey: "userId"
-// });
-// db.users.belongsToMany(db.role, {
-//   through: "user_roles",
-//   foreignKey: "userId",
-//   otherKey: "roleId"
-// });
+db.category.belongsToMany(db.question, {
+  through: "category_has_question",
+  foreignKey: "categoryId",
+  otherKey: "questionId"
+});
+
+
+db.role.belongsToMany(db.user, {
+  through: "user_roles",
+  foreignKey: "roleId",
+  otherKey: "userId"
+});
+db.user.belongsToMany(db.role, {
+  through: "user_roles",
+  foreignKey: "userId",
+  otherKey: "roleId"
+});
 
 db.ROLES = ["user", "admin", "moderator"];
 
