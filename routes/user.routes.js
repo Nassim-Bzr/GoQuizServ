@@ -33,9 +33,9 @@ module.exports = app => {
   const router = require("express").Router();
 
   router.post("/", userController.createUser);
-  router.get("/", [authJwt.verifyToken], userController.getUsers);
+  router.get("/",  userController.getUsers);
   router.get("/:id", [authJwt.verifyToken], userController.getUser);
-  router.put("/:id", [authJwt.verifyToken], userController.updateUser);
+  router.put("/:id",  userController.updateUser);
   router.delete("/:id", [authJwt.verifyToken], userController.deleteUser);
   // router.delete("/", [authJwt.verifyToken], userController.deleteAllUsers);
 

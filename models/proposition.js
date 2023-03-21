@@ -8,10 +8,10 @@ module.exports = (sequelize, Sequelize) => {
         },
         text: {
             type: Sequelize.STRING
-        },
-        questionId: {
-            type: Sequelize.INTEGER
         }
+    },
+    {
+        timestamps: false
     });
     return Proposition;
 };

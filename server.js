@@ -8,7 +8,7 @@ const cors = require("cors");
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:3006"
+  origin: "*"
 };
 
 app.use(cors(corsOptions));
@@ -40,7 +40,7 @@ db.sequelize.sync({force: true}).then(() => {
   console.log('Drop and Resync Db');
   initial();
 });
-// db.question.sync({force: true})
+db.quizz.sync({force: true})
 
 app.get("/", (req, res) => {
   res.json({ message: "Bienvenue dans l'API GoQuiz." });
@@ -104,11 +104,12 @@ function initial() {
 require('./routes/user.routes')(app);
 require("./routes/category.routes")(app);
 require("./routes/question.routes")(app);
-// require("./routes/anecdote.routes")(app);
+require("./routes/anecdote.routes")(app);
 require("./routes/proposition.routes")(app);
 require("./routes/score.routes")(app);
 require("./routes/answer.routes")(app);
 require("./routes/auth.routes")(app);
+require("./routes/quizz.routes")(app);
 
 
 

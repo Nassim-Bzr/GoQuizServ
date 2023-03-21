@@ -2,25 +2,25 @@
 module.exports = (sequelize, Sequelize) => {
     const Question = sequelize.define('questions', {
         id: {
-            type:Sequelize.INTEGER,
+            type: Sequelize.INTEGER,
             primaryKey: true,
-            autoIncrement : true
+            autoIncrement: true
         },
         question: {
             type: Sequelize.STRING
         },
-        proposition: {
-            type: Sequelize.STRING
-        },
-        answer: {
-            type: Sequelize.STRING
-        },
         anecdote: {
-            type: Sequelize.STRING
-        },
-        quizzId: {
-            type: Sequelize.INTEGER
+            type: Sequelize.STRING,
+
+            },
+        wiki:{
+            type: Sequelize.STRING,
         }
-    });
+
+        }     ,
+        {
+            timestamps: false
+        }      
+    );
     return Question;
-};
+    }

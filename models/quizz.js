@@ -1,6 +1,6 @@
 // Category.js model
 module.exports = (sequelize, Sequelize) => {
-    const Quizz = sequelize.define('quizz', {
+    const Quizz = sequelize.define('quizzes', {
         id: {
             type:Sequelize.INTEGER,
             primaryKey: true,
@@ -11,15 +11,11 @@ module.exports = (sequelize, Sequelize) => {
         },
         description: { 
           type:Sequelize.STRING
-        },
-        questionId: { 
-          type:Sequelize.INTEGER
-        },
-        
-        categoryId: { 
-          type:Sequelize.INTEGER
         }
 
+    },
+    {
+        timestamps: false
     });
     return Quizz;
   };

@@ -23,9 +23,6 @@ module.exports = (sequelize, Sequelize) => {
       
       favorites: {
         type: Sequelize.INTEGER
-      }, 
-      roleId : {
-        type: Sequelize.INTEGER
       }
     });
   

@@ -1,21 +1,21 @@
-// module.exports = app => {
-//     const anecdote = require("../controllers/anecdote.controllers");
+module.exports = app => {
+    const anecdote = require("../controllers/anecdote.controllers");
   
-//     var router = require("express").Router();
+    var router = require("express").Router();
   
-//     router.post("/", anecdote.createAnecdote);
+    router.post("/", anecdote.createAnecdote);
   
-//     router.get("/", anecdote.getAnecdotes);
+    router.get("/", anecdote.getAnecdotes);
   
 
-//     router.get("/:id", anecdote.getAnecdote);
+    router.get("/:id", anecdote.getAnecdote);
   
    
-//     router.put("/:id", anecdote.updateAnecdote);
+    router.put("/:id", anecdote.updateAnecdote);
   
-//     router.delete("/:id", anecdote.deleteAnecdote);
+    router.delete("/:id", anecdote.deleteAnecdote);
   
-//     // router.delete("/", anecdote.deleteAll);
+    // router.delete("/", anecdote.deleteAll);
   
-//     app.use('/api/anecdote', router);
-//   };
+    app.use('/api/anecdote', router);
+  };

@@ -15,6 +15,9 @@ module.exports = (sequelize, Sequelize) => {
       imageUrl: { 
         type:Sequelize.STRING
       }
+  },
+  {
+      timestamps: false
   });
   return Category;
 };

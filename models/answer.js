@@ -9,13 +9,10 @@ module.exports = (sequelize, Sequelize) => {
 
         text: {
             type: Sequelize.STRING
-        },
-        anecdote: {
-            type: Sequelize.STRING
-        },
-        questionId: {
-            type: Sequelize.INTEGER
         }
+    },
+    {
+        timestamps: false
     });
     return Answer;
 };

@@ -1,24 +1,23 @@
 module.exports = (sequelize, Sequelize) => {
-    const Score = sequelize.define("score", {
-        user_id: {
-          type: Sequelize.INTEGER
-        },
-        quiz_title: {
-          type: Sequelize.STRING
-        },
-        category: {
-          type: Sequelize.STRING
-        },
-        score: {
-          type: Sequelize.INTEGER
-        },
-        date: {
-          type: Sequelize.DATE
-        }
-      });
-    
-  
-    return Score;
-  };
+  const Score = sequelize.define("score", {
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true, 
+      autoIncrement: true
 
-  
+    },
+    score: {
+      type: Sequelize.INTEGER
+    },
+    date: {
+      type: Sequelize.DATE
+    }
+  },
+  {
+      timestamps: false
+  });
+
+
+  return Score;
+};
+

@@ -7,16 +7,15 @@ module.exports = (sequelize, Sequelize) => {
             autoIncrement : true
         },
         
-        userId: { 
-          type:Sequelize.INTEGER
-        },
-        
-        quizzId: { 
+        favoris: { 
           type:Sequelize.INTEGER
         }
 
+    },
+    {
+        timestamps: false
     });
-    return Quizz;
+    return Favoris;
   };
   
   

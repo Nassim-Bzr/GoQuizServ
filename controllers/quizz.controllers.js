@@ -1,11 +1,14 @@
+
 const db = require("../models/index");
-const Question = db.quizz;
+const QuizHasCategory = db.quiz_has_category;
+const Category = db.category;
+const Quizz = db.quizz;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Quiz
 exports.create = (req, res) => {
     // Validate request
-    if (!req.body.quizz) {
+    if (!req.body.title) {
       res.status(400).send({
         message: "ça marche pas zine!"
       });
@@ -14,11 +17,12 @@ exports.create = (req, res) => {
   
     // Create a Tutorial
     const quizz = {
-      quizz: req.body.quizz
+      title: req.body.title,
+      description: req.body.description
     };
   
     // Save Tutorial in the database
-    Question.create(quizz )
+    Quizz.create(quizz )
       .then(data => {
         res.send(data);
       })
@@ -35,7 +39,16 @@ exports.findAll = (req, res) => {
     const quizz = req.query.quizz;
     var condition = quizz ? { quizz: { [Op.iLike]: `%${quizz}%` } } : null;
   
-    Question.findAll({ where: condition })
+    Quizz.findAll({ where: condition  ,  
+      include: [{
+        model: Category,
+        as: 'category',
+        through: {
+          model: QuizHasCategory,
+          as: 'quiz_has_category'
+        }
+      }]
+    })
       .then(data => {
         res.send(data);
       })
@@ -51,7 +64,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
   
-    Question.findByPk(id)
+    Quizz.findByPk(id)
       .then(data => {
         if (data) {
           res.send(data);
@@ -72,7 +85,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
     const id = req.params.id;
   
-    Question.update(req.body, {
+    Quizz.update(req.body, {
       where: { id: id }
     })
       .then(num => {
@@ -97,30 +110,30 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
   
-    Question.destroy({
+    Quizz.destroy({
       where: { id: id }
     })
       .then(num => {
         if (num == 1) {
           res.send({
-            message: "Question was deleted successfully!"
+            message: "Quizz was deleted successfully!"
           });
         } else {
           res.send({
-            message: `Cannot delete Question with id=${id}. Maybe Question was not found!`
+            message: `Cannot delete Quizz with id=${id}. Maybe Quizz was not found!`
           });
         }
       })
       .catch(err => {
         res.status(500).send({
-          message: "Could not delete Question with id=" + id
+          message: "Could not delete Quizz with id=" + id
         });
       });
   };
 
 // Delete all Tutorials from the database.
 exports.deleteAll = (req, res) => {
-    Question.destroy({
+    Quizz.destroy({
       where: {},
       truncate: false
     })
@@ -137,7 +150,7 @@ exports.deleteAll = (req, res) => {
 
 // Find all published Tutorials
 // exports.findAllPublished = (req, res) => {
-//     Question.findAll({ where: { published: true } })
+//     Quizz.findAll({ where: { published: true } })
 //       .then(data => {
 //         res.send(data);
 //       })
