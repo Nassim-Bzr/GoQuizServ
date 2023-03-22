@@ -64,7 +64,16 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
   
-    Quizz.findByPk(id)
+    Quizz.findByPk(id, { 
+      include: [{
+        model: Category,
+        as: 'category',
+        through: {
+          model: QuizHasCategory,
+          as: 'quiz_has_category'
+        }
+      }]
+    })
       .then(data => {
         if (data) {
           res.send(data);
