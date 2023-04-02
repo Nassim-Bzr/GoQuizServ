@@ -5,12 +5,7 @@ module.exports = (sequelize, Sequelize) => {
             type:Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement : true
-        },
-        
-        favoris: { 
-          type:Sequelize.INTEGER
         }
-
     },
     {
         timestamps: false

@@ -1,5 +1,6 @@
 const db = require("../models/index");
 const Quizz = db.quizz;
+const Category = db.category;
 const Question = db.question;
 const Op = db.Sequelize.Op;
 const Answer = db.answer
@@ -37,11 +38,19 @@ exports.create = (req, res) => {
 };
 
 // Retrieve all Tutorials from the database.
+// Retrieve all Tutorials from the database.
 exports.findAll = (req, res) => {
   const question = req.query.question;
+  const quizzId = req.query.quizzId;
   var condition = question ? { question: { [Op.iLike]: `%${question}%` } } : null;
-
+  if (quizzId) {
+    condition = {
+      ...condition,
+      quizz_id: quizzId
+    };
+  }
   Question.findAll({
+    where: condition,
     include: [
       {
         model: Answer,
@@ -63,7 +72,6 @@ exports.findAll = (req, res) => {
       });
     });
 };
-
 // Find a single Tutorial with an id
 exports.findOne = async (req, res) => {
   const id = req.params.id;
@@ -76,7 +84,13 @@ exports.findOne = async (req, res) => {
       },
       {
         model: Quizz,
-        as: "quizzes"
+        as: "quizzes",
+        include: [
+          {
+            model: Category,
+            as: "categories"
+          }
+        ]
       }
     ]
   })

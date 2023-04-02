@@ -110,6 +110,7 @@ require("./routes/score.routes")(app);
 require("./routes/answer.routes")(app);
 require("./routes/auth.routes")(app);
 require("./routes/quizz.routes")(app);
+require("./routes/favoris.routes")(app);
 
 
 

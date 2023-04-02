@@ -1,24 +1,24 @@
 const db = require("../models/index");
 const Favoris = db.favoris;
 const Op = db.Sequelize.Op;
-
+const UserFavoris = db.user_favoris;
+const User = db.user;
+const Quizz = db.quizz;
 // Create and Save a new Quiz
 exports.create = (req, res) => {
     // Validate request
-    if (!req.body.userId, req.body.quizzId) {
-      res.status(400).send({
-        message: "ça marche pas zine!"
-      });
-      return;
-    }
+    // if (!req.body.userId, req.body.quizzId) {
+    //   res.status(400).send({
+    //     message: "ça marche pas "
+    //   });
+    //   return;
+    // }
   
-    // Create a Tutorial
     const favoris = {
-     
       userId: req.body.userId,
-      quizzId: req.body.quizzId
+      quizz_id: req.body.quizz_id
     }
-     
+    
   
     // Save Tutorial in the database
     Favoris.create(favoris)
@@ -35,10 +35,10 @@ exports.create = (req, res) => {
 
 // Retrieve all Tutorials from the database.
 exports.findAll = (req, res) => {
-    const title = req.query.title;
-    var condition = title ? { title: { [Op.iLike]: `%${title}%` } } : null;
+  const userId = req.query.userId;
+    var condition = userId ? { userId: userId } : null;
   
-    favoris.findAll({ where: condition })
+    Favoris.findAll({ where: condition })
       .then(data => {
         res.send(data);
       })
@@ -51,37 +51,45 @@ exports.findAll = (req, res) => {
   };
 
 // Find a single Tutorial with an id
-exports.findBytitle = (req, res) => {
-    const title = req.body.title;
-    const lahwak = req.body.lahwak;
-    favoris.findOne({ lahwak: lahwak, title: title })
-      .then(data => {
-        if (data) {
-          res.send(data);
-        } else {
-          res.status(404).send({
-            message: `Cannot find Quiz with title=${title}.`
-          });
-        }
-      })
-      .catch(err => {
-        res.status(500).send({
-          message: "Error retrieving Quiz with title=" + title
-        });
-      });
-  };
 
+exports.findOne = (req, res) => {
+  const userId = req.params.id;
+
+  UserFavoris.findOne({
+    where: { id: userId },
+    include: [
+      {
+        model: User,
+        attributes: ["id", "username"]
+      },
+      {
+        model: Quizz,
+        attributes: ["id", "title"]
+      }
+    ]
+  })
+  .then(data => {
+    const username = data.user.username;
+    const quizTitle = data.quizz.title;
+    console.log(`Username: ${username}, Quiz Title: ${quizTitle}`);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Error retrieving favoris with id=" + favorisId
+    });
+  });
+}
 // Update a Quiz by the id in the request
 exports.update = (req, res) => {
     const id = req.params.id;
   
-    favoris.update(req.body, {
+    Favoris.update(req.body, {
       where: { id: id }
     })
       .then(num => {
         if (num == 1) {
           res.send({
-            message: "favoris was updated successfully."
+            message: "Favoris was updated successfully."
           });
         } else {
           res.send({
@@ -100,7 +108,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
   
-    favoris.destroy({
+    Favoris.destroy({
       where: { id: id }
     })
       .then(num => {

@@ -76,7 +76,8 @@ module.exports = {
                 password: hash,
                 score: req.body.score,
                 favorisId: req.body.favorisId,
-                roleId: req.body.roleId
+                roleId: req.body.roleId,
+                profilImgUrl:req.body.profilImgUrl,
             });
 
             return res.status(201).send(user);
@@ -122,7 +123,8 @@ module.exports = {
                 password: req.body.password || user.password,
                 score: req.body.score || user.score,
                 favorisId: req.body.favorisId || user.favorisId,
-                roleId: req.body.roleId || user.roleId
+                roleId: req.body.roleId || user.roleId,
+                profilImgUrl:req.body.profilImgUrl,
             });
 
             return res.status(200).send(user);

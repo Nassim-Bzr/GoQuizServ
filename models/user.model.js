@@ -1,3 +1,5 @@
+//user.model.js
+
 const bcrypt = require('bcrypt');
 
 module.exports = (sequelize, Sequelize) => {
@@ -20,9 +22,8 @@ module.exports = (sequelize, Sequelize) => {
       score: {
         type: Sequelize.INTEGER
       },
-      
-      favorites: {
-        type: Sequelize.INTEGER
+      profilImgUrl:{
+        type: Sequelize.STRING
       }
     });
   

@@ -1,3 +1,5 @@
+// models/index.js
+
 const config = require("../config/db.config.js");
 
 const Sequelize = require("sequelize");
@@ -25,14 +27,15 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 
-db.quizz = require("../models/quizz")(sequelize,Sequelize);
-db.score = require("../models/score")(sequelize,Sequelize);
-db.user = require("../models/user.model")(sequelize,Sequelize);
+db.quizz = require("../models/quizz")(sequelize, Sequelize);
+db.score = require("../models/score")(sequelize, Sequelize);
+db.user = require("../models/user.model")(sequelize, Sequelize);
 db.role = require("../models/role.model.js")(sequelize, Sequelize);
 db.category = require("./category")(sequelize, Sequelize);
-db.answer = require ("../models/answer")(sequelize,Sequelize);
+db.answer = require("../models/answer")(sequelize, Sequelize);
 db.question = require("../models/question")(sequelize, Sequelize);
-db.proposition = require("../models/proposition")(sequelize, Sequelize);
+db.options = require("../models/options")(sequelize, Sequelize);
+db.favoris = require("../models/favoris")(sequelize, Sequelize);
 
 
 // une question a plusieurs answers
@@ -66,6 +69,18 @@ db.question.belongsTo(db.quizz, {
   as: "quizzes"
 });
 
+db.question.belongsToMany(db.options, {
+  through: "question_option",
+  foreignKey: "question_id",
+  otherKey: "option_id",
+  as: "options",
+});
+db.options.belongsToMany(db.question, {
+  through: "question_option",
+  foreignKey: "option_id",
+  otherKey: "question_id",
+  as: "questions",
+});
 
 // Quiz <> categorys, via la table de liaison
 // "Un Quiz possède plusieurs categorys"
@@ -74,7 +89,7 @@ db.quizz.belongsToMany(db.category, {
   through: 'quiz_has_category', // "via la table de liaison qui s'appelle ..."
   foreignKey: 'quizz_id', // le nom de la clef de Quiz dans la table de liaison
   otherKey: 'category_id', // le nom de la clef de "l'autre" (donc category)
- 
+
 });
 // ... et la réciproque !
 db.category.belongsToMany(db.quizz, {
@@ -84,6 +99,20 @@ db.category.belongsToMany(db.quizz, {
   foreignKey: 'category_id',
 });
 
+
+
+db.user.belongsToMany(db.quizz, {
+  through: "user_favoris",
+  foreignKey: "quizz_id",
+  otherKey: "userId",
+  timestamps: false
+});
+db.quizz.belongsToMany(db.user, {
+  through: "user_favoris",
+  foreignKey: "userId",
+  otherKey: "quizz_id",
+  timestamps: false
+});
 
 
 

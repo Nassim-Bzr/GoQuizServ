@@ -4,7 +4,7 @@ const QuizHasCategory = db.quiz_has_category;
 const Category = db.category;
 const Quizz = db.quizz;
 const Op = db.Sequelize.Op;
-
+const Question = db.question;
 // Create and Save a new Quiz
 exports.create = (req, res) => {
     // Validate request
@@ -34,62 +34,70 @@ exports.create = (req, res) => {
       });
   };
 
-// Retrieve all Tutorials from the database.
 exports.findAll = (req, res) => {
-    const quizz = req.query.quizz;
-    var condition = quizz ? { quizz: { [Op.iLike]: `%${quizz}%` } } : null;
-  
-    Quizz.findAll({ where: condition  ,  
-      include: [{
-        model: Category,
-        as: 'category',
-        through: {
-          model: QuizHasCategory,
-          as: 'quiz_has_category'
-        }
-      }]
+  const category = req.query.category;
+  var condition = category ? { '$category.name$': category} : null;
+
+  Quizz.findAll({
+    where: condition,
+    include: [{
+      model: Category,
+      as: 'category',
+      through: {
+        model: QuizHasCategory,
+        as: 'quiz_has_category'
+      }
+    }]
+  })
+    .then(data => {
+      res.send(data);
     })
-      .then(data => {
-        res.send(data);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while retrieving tutorials."
-        });
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving quizzes."
       });
-  };
+    });
+};
 
 // Find a single Tutorial with an id
 exports.findOne = (req, res) => {
     const id = req.params.id;
   
-    Quizz.findByPk(id, { 
-      include: [{
-        model: Category,
-        as: 'category',
-        through: {
-          model: QuizHasCategory,
-          as: 'quiz_has_category'
+    Quizz.findOne({ 
+      where: { id },
+      include: [
+        {
+          model: Category,
+          as: 'category',
+          through: {
+            model: QuizHasCategory,
+            as: 'quiz_has_category'
+          }
+        },
+        {
+          model: Question,
+          as: 'questions'
         }
-      }]
+      ]
     })
       .then(data => {
         if (data) {
-          res.send(data);
+          // Récupérez les questions associées
+          const questions = data.questions;
+          res.send({data, questions});
         } else {
           res.status(404).send({
-            message: `Cannot find Question with id=${id}.`
+            message: `Cannot find Quiz with id=${id}.`
           });
         }
       })
       .catch(err => {
         res.status(500).send({
-          message: "Error retrieving Question with id=" + id
+          message: "Error retrieving Quiz with id=" + id
         });
       });
   };
-
 // Update a Question by the id in the request
 exports.update = (req, res) => {
     const id = req.params.id;
