@@ -26,6 +26,7 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
+db.good_answer = require("../models/good_answer")(sequelize, Sequelize);
 
 db.quizz = require("../models/quizz")(sequelize, Sequelize);
 db.score = require("../models/score")(sequelize, Sequelize);
@@ -54,9 +55,23 @@ db.answer.belongsTo(db.question, {
 // en effet, il y a aussi "la bonne réponse" !
 db.question.belongsTo(db.answer, {
   foreignKey: "answer_id",
-  as: "good_answer"
+  as: "correct_answer"
 });
 
+db.question.belongsTo(db.good_answer, {
+  foreignKey: 'good_answer_id',
+  as: 'good_answer'
+});
+
+
+db.good_answer.belongsTo(db.question, {
+  foreignKey: "question_id",
+  as: "question"
+});
+db.good_answer.belongsTo(db.answer, {
+  foreignKey: "answer_id",
+  as: "answer"
+});
 
 // Question : "un Quiz possède plusieurs Questions"
 db.quizz.hasMany(db.question, {
