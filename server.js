@@ -36,32 +36,41 @@ const db = require("./models/index");
 const Role = db.role;
 
 
-db.sequelize.sync({force: true}).then(() => {
-  console.log('Drop and Resync Db');
-  initial();
-});
-db.quizz.sync({force: true})
+// db.sequelize.sync({force: true}).then(() => {
+//   console.log('Drop and Resync Db');
+//   initial();
+// });
+// db.quizz.sync({force: true})
 
 app.get("/", (req, res) => {
   res.json({ message: "Bienvenue dans l'API GoQuiz." });
 });
 
 function initial() {
-  Role.create({
-    id: 1,
-    name: "user"
-  });
- 
-  Role.create({
-    id: 2,
-    name: "moderator"
-  });
- 
-  Role.create({
-    id: 3,
-    name: "admin"
+  Role.findAll().then((roles) => {
+    if (roles.length === 0) {  // only create roles if no roles exist in the database
+      Role.create({
+        id: 1,
+        name: "user"
+      });
+
+      Role.create({
+        id: 2,
+        name: "moderator"
+      });
+
+      Role.create({
+        id: 3,
+        name: "admin"
+      });
+    }
   });
 }
+
+db.sequelize.sync().then(() => {  // remove {force: true} to avoid dropping all tables
+  console.log('Resync Db');
+  initial();
+});
 // app.post('/api/score', (req, res) => {
 //   const score = req.body;
 

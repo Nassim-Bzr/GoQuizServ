@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jsonwebtoken = require('jsonwebtoken');
 const User = require('../models').user;
-
+const Role = require('../models/role.model')
 const jwtSecret = process.env.JWT_SECRET || 'secretkey';
 
 
@@ -64,27 +64,31 @@ module.exports = {
         }
     },
 
-
     async createUser(req, res) {
         try {
             const saltRounds = 10;
             const hash = await bcrypt.hash(req.body.password, saltRounds);
-
+    
             const user = await User.create({
                 username: req.body.username,
                 email: req.body.email,
                 password: hash,
                 score: req.body.score,
                 favorisId: req.body.favorisId,
-                roleId: req.body.roleId,
                 profilImgUrl:req.body.profilImgUrl,
             });
-
+    
+            const userRole = await Role.findOne({ where: { name: 'user' }});
+            if (userRole) {
+                await user.setRoles([userRole.id]);
+            }
+    
             return res.status(201).send(user);
         } catch (error) {
             return res.status(400).send(error);
         }
     },
+    
 
     async getUsers(req, res) {
         try {
@@ -123,16 +127,21 @@ module.exports = {
                 password: req.body.password || user.password,
                 score: req.body.score || user.score,
                 favorisId: req.body.favorisId || user.favorisId,
-                roleId: req.body.roleId || user.roleId,
-                profilImgUrl:req.body.profilImgUrl,
+                profilImgUrl:req.body.profilImgUrl || user.profilImgUrl,
             });
-
+    
+            if (req.body.role) {
+                const newRole = await Role.findOne({ where: { name: req.body.role }});
+                if (newRole) {
+                    await user.setRoles([newRole.id]);
+                }
+            }
+    
             return res.status(200).send(user);
         } catch (error) {
             return res.status(400).send(error);
         }
     },
-
     async deleteUser(req, res) {
         try {
             const user = await User.findByPk(req.params.id);

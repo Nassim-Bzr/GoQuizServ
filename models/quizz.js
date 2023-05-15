@@ -1,4 +1,4 @@
-// Category.js model
+// Quizz.js model
 module.exports = (sequelize, Sequelize) => {
     const Quizz = sequelize.define('quizzes', {
         id: {

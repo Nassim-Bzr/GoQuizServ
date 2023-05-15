@@ -1,8 +1,10 @@
 // models/index.js
+require('dotenv').config();
+
 
 const config = require("../config/db.config.js");
 
-const Sequelize = require("sequelize");
+const { Sequelize } = require("sequelize");
 const sequelize = new Sequelize(
   config.DB,
   config.USER,
@@ -10,7 +12,7 @@ const sequelize = new Sequelize(
   {
     host: config.HOST,
     dialect: config.dialect,
-    operatorsAliases: 0,
+    operatorsAliases: false,
 
     pool: {
       max: config.pool.max,
@@ -27,7 +29,6 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.good_answer = require("../models/good_answer")(sequelize, Sequelize);
-
 db.quizz = require("../models/quizz")(sequelize, Sequelize);
 db.score = require("../models/score")(sequelize, Sequelize);
 db.user = require("../models/user.model")(sequelize, Sequelize);

@@ -25,13 +25,19 @@ exports.signup = (req, res) => {
           }
         }).then(roles => {
           user.setRoles(roles).then(() => {
-            res.send({ message: "User was registered successfully!" });
+            var token = jwt.sign({ id: user.id, username: user.username, roles: req.body.roles }, config.secret, {
+              expiresIn: 86400 // 24 hours
+            });
+            res.send({ message: "User was registered successfully!", accessToken: token });
           });
         });
       } else {
         // user role = 1
         user.setRoles([1]).then(() => {
-          res.send({ message: "User was registered successfully!" });
+          var token = jwt.sign({ id: user.id, username: user.username, roles: ["ROLE_USER"] }, config.secret, {
+            expiresIn: 86400 // 24 hours
+          });
+          res.send({ message: "User was registered successfully!", accessToken: token });
         });
       }
     })
@@ -39,7 +45,6 @@ exports.signup = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
-
 exports.signin = (req, res) => {
   User.findOne({
     where: {
@@ -63,15 +68,12 @@ exports.signin = (req, res) => {
         });
       }
 
-      var token = jwt.sign({ id: user.id }, config.secret, {
+      var token = jwt.sign({ id: user.id, username: user.username, roles: [] }, config.secret, {
         expiresIn: 86400 // 24 hours
       });
 
-      var authorities = [];
       user.getRoles().then(roles => {
-        for (let i = 0; i < roles.length; i++) {
-          authorities.push("ROLE_" + roles[i].name.toUpperCase());
-        }
+        var authorities = roles.map(role => "ROLE_" + role.name.toUpperCase());
         res.status(200).send({
           id: user.id,
           username: user.username,

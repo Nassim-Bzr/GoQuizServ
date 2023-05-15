@@ -1,3 +1,5 @@
+const { authJwt } = require("../middleware"); // Assurez-vous que le chemin est correct
+
 module.exports = app => {
     const quizz = require("../controllers/quizz.controllers");
   
@@ -16,14 +18,13 @@ module.exports = app => {
     router.get("/:id", quizz.findOne);
   
     // Update a Tutorial with id
-   
-    router.put("/:id", quizz.update);
+    router.put("/:id", [authJwt.verifyToken, authJwt.isAdmin], quizz.update);
   
     // Delete a Tutorial with id
-    router.delete("/:id", quizz.delete);
+    router.delete("/:id", [authJwt.verifyToken, authJwt.isAdmin], quizz.delete);
   
     // Create a new Tutorial
-    router.delete("/", quizz.deleteAll);
+    router.delete("/", [authJwt.verifyToken, authJwt.isAdmin], quizz.deleteAll);
   
     app.use('/api/quizz', router);
-  };
+};

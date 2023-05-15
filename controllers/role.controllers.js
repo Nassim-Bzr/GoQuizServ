@@ -1,5 +1,4 @@
 const db = require("../models/index");
-const Score = db.score;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Quiz
