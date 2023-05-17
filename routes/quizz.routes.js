@@ -18,7 +18,7 @@ module.exports = app => {
     router.get("/:id", quizz.findOne);
   
     // Update a Tutorial with id
-    router.put("/:id", [authJwt.verifyToken, authJwt.isAdmin], quizz.update);
+    router.put("/:id", quizz.updateQuiz);
   
     // Delete a Tutorial with id
     router.delete("/:id", [authJwt.verifyToken, authJwt.isAdmin], quizz.delete);
