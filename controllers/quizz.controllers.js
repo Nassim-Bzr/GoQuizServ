@@ -65,8 +65,8 @@ exports.create = (req, res) => {
   });
 };
 exports.findAll = (req, res) => {
-  const category = req.query.category;
-  var condition = category ? { '$category.name$': category} : null;
+  const title = req.query.title ? req.query.title.toLowerCase() : null;
+  var condition = title ? { [Op.iLike]: `%${title}%`} : null;
 
   Quizz.findAll({
     where: condition,
@@ -89,6 +89,7 @@ exports.findAll = (req, res) => {
       });
     });
 };
+
 // Find a single Tutorial with an id
 exports.findOne = (req, res) => {
     const id = req.params.id;
