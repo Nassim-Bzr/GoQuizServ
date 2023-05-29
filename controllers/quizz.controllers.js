@@ -94,28 +94,26 @@ exports.search = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-  const title = req.query.title ? req.query.title.toLowerCase() : null;
-  var condition = title ? { title: { [Op.iLike]: `%${title}%` } } : null; // Modifiez la condition de recherche
-
+  const category = req.query.category;
+  var condition = category ? { '$category.name$': category} : null;
   Quizz.findAll({
     where: condition,
-    include: [
-      {
-        model: Category,
-        as: 'category',
-        through: {
-          model: QuizHasCategory,
-          as: 'quiz_has_category'
-        }
+    include: [{
+      model: Category,
+      as: 'category',
+      through: {
+        model: QuizHasCategory,
+        as: 'quiz_has_category'
       }
-    ]
+    }]
   })
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
-        message: err.message || "Some error occurred while retrieving quizzes."
+        message:
+          err.message || "Some error occurred while retrieving quizzes."
       });
     });
 };
