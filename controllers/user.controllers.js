@@ -148,6 +148,10 @@ module.exports = {
                 const saltRounds = 10;
                 const updatedPassword = await bcrypt.hash(req.body.password, saltRounds);
                 user.password = updatedPassword;
+
+                // Enregistrez les modifications dans la base de données
+                await user.save();
+
             }
 
             // Continuez la mise à jour comme d'habitude
@@ -158,7 +162,6 @@ module.exports = {
                 favorisId: req.body.favorisId || user.favorisId,
                 profilImgUrl: req.body.profilImgUrl || user.profilImgUrl,
             });
-
 
             if (req.body.role === 'admin') {
                 const adminRole = await Role.findOne({ where: { name: 'admin' } });

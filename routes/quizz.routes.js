@@ -12,7 +12,7 @@ module.exports = app => {
     router.get("/", quizz.findAll);
   
     // Retrieve all published quizz
-    // router.get("/published", quizz.findAllPublished);
+    router.get("/search", quizz.search);
   
     // Retrieve a single Tutorial with id
     router.get("/:id", quizz.findOne);

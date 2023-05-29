@@ -3,6 +3,7 @@ const config = require("../config/auth.config.js");
 const db = require("../models/index");
 const User = db.user;
 
+// Middleware de vérification du jeton
 verifyToken = (req, res, next) => {
   let token = req.headers["x-access-token"];
 
@@ -23,6 +24,7 @@ verifyToken = (req, res, next) => {
   });
 };
 
+// Middleware pour vérifier le rôle d'administrateur
 isAdmin = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     user.getRoles().then(roles => {
@@ -41,6 +43,7 @@ isAdmin = (req, res, next) => {
   });
 };
 
+// Middleware pour vérifier le rôle de modérateur
 isModerator = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     user.getRoles().then(roles => {
@@ -58,6 +61,7 @@ isModerator = (req, res, next) => {
   });
 };
 
+// Middleware pour vérifier le rôle de modérateur ou d'administrateur
 isModeratorOrAdmin = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     user.getRoles().then(roles => {
@@ -79,6 +83,8 @@ isModeratorOrAdmin = (req, res, next) => {
     });
   });
 };
+
+// Middleware pour authentifier l'utilisateur
 const authenticateUser = async (req, res, next) => {
   try {
     // Obtenez l'utilisateur actuel à partir de l'ID stocké dans le jeton d'accès
@@ -94,19 +100,20 @@ const authenticateUser = async (req, res, next) => {
       next();
     } else {
       // L'utilisateur n'a pas le rôle "user"
-      res.status(403).json({ message: "Accès refusé. Vous devez avoir le rôle 'user'." });
+      res.status(403).json({ message: "Access denied. You must have 'user' role." });
     }
   } catch (error) {
-    res.status(500).json({ message: "Une erreur est survenue lors de l'authentification de l'utilisateur." });
+    res.status(500).json({ message: "An error occurred while authenticating the user." });
   }
 };
 
+// Export des fonctions middleware d'authentification
 const authJwt = {
   verifyToken: verifyToken,
   isAdmin: isAdmin,
   isModerator: isModerator,
   isModeratorOrAdmin: isModeratorOrAdmin,
-  authenticateUser: authenticateUser // Ajoutez cette ligne pour exporter le middleware d'authentification
+  authenticateUser: authenticateUser
 };
 
 module.exports = authJwt;

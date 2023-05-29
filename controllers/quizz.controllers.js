@@ -64,32 +64,61 @@ exports.create = (req, res) => {
     });
   });
 };
-exports.findAll = (req, res) => {
+
+
+exports.search = (req, res) => {
   const title = req.query.title ? req.query.title.toLowerCase() : null;
-  var condition = title ? { [Op.iLike]: `%${title}%`} : null;
+  var condition = title ? { title: { [Op.iLike]: `%${title}%` } } : null; // Modifiez la condition de recherche
 
   Quizz.findAll({
     where: condition,
-    include: [{
-      model: Category,
-      as: 'category',
-      through: {
-        model: QuizHasCategory,
-        as: 'quiz_has_category'
+    include: [
+      {
+        model: Category,
+        as: 'category',
+        through: {
+          model: QuizHasCategory,
+          as: 'quiz_has_category'
+        }
       }
-    }]
+    ]
   })
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving quizzes."
+        message: err.message || "Some error occurred while retrieving quizzes."
       });
     });
 };
 
+exports.findAll = (req, res) => {
+  const title = req.query.title ? req.query.title.toLowerCase() : null;
+  var condition = title ? { title: { [Op.iLike]: `%${title}%` } } : null; // Modifiez la condition de recherche
+
+  Quizz.findAll({
+    where: condition,
+    include: [
+      {
+        model: Category,
+        as: 'category',
+        through: {
+          model: QuizHasCategory,
+          as: 'quiz_has_category'
+        }
+      }
+    ]
+  })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving quizzes."
+      });
+    });
+};
 // Find a single Tutorial with an id
 exports.findOne = (req, res) => {
     const id = req.params.id;
