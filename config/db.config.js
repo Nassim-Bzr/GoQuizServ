@@ -11,5 +11,9 @@ module.exports = {
     min: 0,
     acquire: 30000,
     idle: 10000
+  },
+  // Ajout d'une propriété "scripts" pour exécuter le script SQL
+  scripts: {
+    importAll: '/var/www/html/Test12/Apo-Quiz/data/importAll.sql'
   }
 };

@@ -128,7 +128,7 @@ module.exports = {
                     await user.setRoles([adminRole.id]);
                 }
             }
-            // Si un nouveau mot de passe est fourni, vérifiez que le mot de passe actuel est correct
+            // Si un nouveau mot de passe est fourni, vérifie que le mot de passe actuel est correct
             if (req.body.password) {
                 const currentPassword = req.body.currentPassword;
                 if (!currentPassword) {
@@ -144,17 +144,15 @@ module.exports = {
                     });
                 }
 
-                // Si le mot de passe actuel est correct, hachez et mettez à jour le nouveau mot de passe
+                // Si le mot de passe actuel est correct, hache et met à jour le nouveau mot de passe
                 const saltRounds = 10;
                 const updatedPassword = await bcrypt.hash(req.body.password, saltRounds);
                 user.password = updatedPassword;
 
-                // Enregistrez les modifications dans la base de données
                 await user.save();
 
             }
 
-            // Continuez la mise à jour comme d'habitude
             await user.update({
                 username: req.body.username || user.username,
                 email: req.body.email || user.email,
@@ -163,12 +161,7 @@ module.exports = {
                 profilImgUrl: req.body.profilImgUrl || user.profilImgUrl,
             });
 
-            if (req.body.role === 'admin') {
-                const adminRole = await Role.findOne({ where: { name: 'admin' } });
-                if (adminRole) {
-                    await user.setRoles([adminRole.id]);
-                }
-            }
+          
 
             return res.status(200).send(user);
         } catch (error) {

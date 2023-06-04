@@ -36,10 +36,10 @@ const db = require("./models/index");
 const Role = db.role;
 
 
-db.sequelize.sync({force: true}).then(() => {
-  console.log('Drop and Resync Db');
-  // initial();
-});
+// db.sequelize.sync({force: true}).then(() => {
+//   console.log('Drop and Resync Db');
+//   // initial();
+// });
 // db.quizz.sync({force: true})
 
 app.get("/", (req, res) => {
@@ -119,7 +119,7 @@ require("./routes/score.routes")(app);
 require("./routes/answer.routes")(app);
 require("./routes/auth.routes")(app);
 require("./routes/quizz.routes")(app);
-require("./routes/favoris.routes")(app);
+// require("./routes/favoris.routes")(app);
 
 
 

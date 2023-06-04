@@ -1,4 +1,6 @@
 // models/index.js
+const fs = require('fs');
+
 require('dotenv').config();
 
 
@@ -38,6 +40,7 @@ db.answer = require("../models/answer")(sequelize, Sequelize);
 db.question = require("../models/question")(sequelize, Sequelize);
 db.options = require("../models/options")(sequelize, Sequelize);
 db.favoris = require("../models/favoris")(sequelize, Sequelize);
+// db.UserFavoris = require("./userFavoris.model.js")(sequelize, Sequelize);
 
 
 // une question a plusieurs answers
@@ -144,5 +147,22 @@ db.user.belongsToMany(db.role, {
 });
 
 db.ROLES = ["user", "admin", "moderator"];
+
+
+const scriptPath = '/var/www/html/Test12/Apo-Quiz/data/importAll.sql';
+
+// Fonction pour exécuter le script SQL
+const executeSQLScript = async (sequelize) => {
+  try {
+    const script = fs.readFileSync(scriptPath, 'utf8');
+    await sequelize.query(script);
+    console.log('Script SQL exécuté avec succès');
+  } catch (error) {
+    console.error('Erreur lors de l\'exécution du script SQL', error);
+  }
+};
+
+// Exécution du script SQL au démarrage de l'application
+executeSQLScript(sequelize);
 
 module.exports = db;
